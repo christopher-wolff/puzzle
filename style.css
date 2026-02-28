@@ -270,21 +270,6 @@ h2 {
   margin-bottom: 0.95rem;
 }
 
-.translation-form {
-  display: grid;
-  gap: 0.55rem;
-}
-
-.translation-form label {
-  font-weight: 700;
-}
-
-.translation-controls {
-  display: grid;
-  gap: 0.55rem;
-  grid-template-columns: 1fr auto;
-}
-
 input,
 button {
   border-radius: 10px;
@@ -317,20 +302,6 @@ button:focus-visible {
   transform: translateY(-1px);
 }
 
-.feedback {
-  font-weight: 600;
-  margin: 0;
-  min-height: 1.5em;
-}
-
-.feedback.ok {
-  color: var(--ok);
-}
-
-.feedback.bad {
-  color: var(--bad);
-}
-
 .lexicon-list {
   display: grid;
   gap: 0.6rem;
@@ -343,7 +314,7 @@ button:focus-visible {
   border-radius: 12px;
   display: grid;
   gap: 0.5rem;
-  grid-template-columns: minmax(70px, 94px) 1fr auto minmax(110px, 130px);
+  grid-template-columns: minmax(70px, 94px) 1fr auto auto;
   padding: 0.55rem;
 }
 
@@ -393,28 +364,94 @@ button:focus-visible {
   stroke-width: 3.1;
 }
 
-.guess-status {
-  color: var(--warn);
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin: 0;
+.guess-input.is-correct {
+  border-color: rgba(47, 122, 72, 0.65);
+  outline: 2px solid rgba(47, 122, 72, 0.18);
 }
 
-.guess-status.ok {
+.guess-input.is-wrong {
+  border-color: rgba(159, 47, 47, 0.62);
+  outline: 2px solid rgba(159, 47, 47, 0.17);
+}
+
+.verify-indicator {
+  align-items: center;
+  background: rgba(186, 141, 72, 0.18);
+  border: 2px dashed rgba(137, 96, 40, 0.6);
+  border-radius: 999px;
+  color: rgba(103, 73, 29, 0.78);
+  display: flex;
+  height: 34px;
+  justify-content: center;
+  position: relative;
+  width: 34px;
+}
+
+.indicator-icon {
+  height: 15px;
+  left: 50%;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(0.4);
+  transform-origin: center;
+  width: 15px;
+}
+
+.indicator-icon path {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.6;
+}
+
+.indicator-check path {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+}
+
+.verify-indicator::before {
+  background: currentColor;
+  border-radius: 999px;
+  content: "";
+  height: 6px;
+  opacity: 0.55;
+  width: 6px;
+}
+
+.verify-indicator.is-correct {
+  background: rgba(67, 146, 89, 0.2);
+  border-color: rgba(47, 122, 72, 0.72);
   color: var(--ok);
 }
 
-.guess-status.bad {
+.verify-indicator.is-wrong {
+  background: rgba(197, 98, 98, 0.18);
+  border-color: rgba(159, 47, 47, 0.72);
   color: var(--bad);
 }
 
-footer {
-  color: var(--ink-muted);
-  font-size: 0.88rem;
-  margin: 1rem auto 0;
-  max-width: 980px;
-  position: relative;
-  z-index: 1;
+.verify-indicator.is-correct::before,
+.verify-indicator.is-wrong::before {
+  opacity: 0;
+}
+
+.verify-indicator.is-correct .indicator-check,
+.verify-indicator.is-wrong .indicator-x {
+  opacity: 1;
+}
+
+.verify-indicator.is-correct.animate .indicator-check {
+  animation: pop-in 260ms ease forwards;
+}
+
+.verify-indicator.is-correct.animate .indicator-check path {
+  animation: draw-check 300ms ease forwards;
+}
+
+.verify-indicator.is-wrong.animate .indicator-x {
+  animation: pop-wobble 260ms ease forwards;
 }
 
 code {
@@ -461,13 +498,51 @@ code {
   }
 }
 
+@keyframes draw-check {
+  from {
+    stroke-dashoffset: 24;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes pop-in {
+  0% {
+    transform: translate(-50%, -50%) scale(0.35);
+  }
+
+  70% {
+    transform: translate(-50%, -50%) scale(1.14);
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes pop-wobble {
+  0% {
+    transform: translate(-50%, -50%) scale(0.35);
+  }
+
+  55% {
+    transform: translate(calc(-50% - 1.5px), -50%) scale(1.08);
+  }
+
+  80% {
+    transform: translate(calc(-50% + 1.5px), -50%) scale(1.05);
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
 @media (max-width: 680px) {
   body {
     padding: 1.1rem 0.72rem 2.1rem;
-  }
-
-  .translation-controls {
-    grid-template-columns: 1fr;
   }
 
   .lexicon-row {

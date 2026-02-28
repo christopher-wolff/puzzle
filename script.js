@@ -13,13 +13,20 @@ const verifierLexicon = [
   { glyph: "watch", answers: ["watch", "watches"] },
   { glyph: "under", answers: ["under", "beneath"] },
   { glyph: "creates", answers: ["creates", "create", "makes", "make"] },
-  { glyph: "chris", answers: ["chris"] },
+  { glyph: "chris", answers: ["chris", "christopher"] },
   { glyph: "loves", answers: ["loves", "love"] },
   { glyph: "table", answers: ["table", "desk"] },
   { glyph: "tv", answers: ["tv", "television"] },
-  { glyph: "gift", answers: ["gift", "present"] },
+  { glyph: "gift", answers: ["gift", "present", "gifts", "presents"] },
   { glyph: "hides", answers: ["hides", "hide"] },
 ];
+
+const GUESS_ALIASES = {
+  christopher: "chris",
+  christoph: "chris",
+  presents: "present",
+  gifts: "gift",
+};
 
 // Binary-tree signatures (max depth 2 => 3 levels including root).
 const WORD_TREES = {
@@ -54,9 +61,6 @@ const SVG_NS = "http://www.w3.org/2000/svg";
 const clueList = document.querySelector("#clue-list");
 const finalVineMount = document.querySelector("#final-vine");
 const lexiconMount = document.querySelector("#lexicon-list");
-const translationForm = document.querySelector("#translation-form");
-const translationInput = document.querySelector("#final-translation");
-const translationFeedback = document.querySelector("#final-feedback");
 
 function createSvgElement(name, attrs = {}) {
   const element = document.createElementNS(SVG_NS, name);
@@ -70,6 +74,96 @@ function createSvgElement(name, attrs = {}) {
 
 function normalize(text) {
   return text.trim().toLowerCase().replace(/[.,!?]/g, "").replace(/\s+/g, " ");
+}
+
+function canonicalizeGuessWord(word) {
+  return GUESS_ALIASES[word] || word;
+}
+
+function editDistance(a, b) {
+  const rows = a.length + 1;
+  const cols = b.length + 1;
+  const dp = Array.from({ length: rows }, () => new Array(cols).fill(0));
+
+  for (let i = 0; i < rows; i += 1) {
+    dp[i][0] = i;
+  }
+  for (let j = 0; j < cols; j += 1) {
+    dp[0][j] = j;
+  }
+
+  for (let i = 1; i < rows; i += 1) {
+    for (let j = 1; j < cols; j += 1) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + cost);
+    }
+  }
+
+  return dp[a.length][b.length];
+}
+
+function allowedDistance(word) {
+  if (word.length <= 4) {
+    return 1;
+  }
+
+  if (word.length <= 8) {
+    return 1;
+  }
+
+  return 2;
+}
+
+function isAcceptedGuess(guess, answers) {
+  const canonicalGuess = canonicalizeGuessWord(guess);
+  const canonicalAnswers = [...new Set(answers.map((answer) => canonicalizeGuessWord(answer)))];
+
+  if (canonicalAnswers.includes(canonicalGuess)) {
+    return true;
+  }
+
+  return canonicalAnswers.some((answer) => {
+    const maxDistance = Math.max(allowedDistance(answer), allowedDistance(canonicalGuess));
+    if (Math.abs(answer.length - canonicalGuess.length) > maxDistance) {
+      return false;
+    }
+
+    return editDistance(canonicalGuess, answer) <= maxDistance;
+  });
+}
+
+function buildVerifyIndicator() {
+  const indicator = document.createElement("div");
+  indicator.className = "verify-indicator is-idle";
+  indicator.setAttribute("role", "status");
+  indicator.setAttribute("aria-live", "polite");
+  indicator.setAttribute("aria-label", "Unverified");
+
+  const check = createSvgElement("svg", {
+    class: "indicator-icon indicator-check",
+    viewBox: "0 0 24 24",
+    "aria-hidden": "true",
+  });
+  check.appendChild(createSvgElement("path", { d: "M5 13 L10 18 L19 7" }));
+  indicator.appendChild(check);
+
+  const wrong = createSvgElement("svg", {
+    class: "indicator-icon indicator-x",
+    viewBox: "0 0 24 24",
+    "aria-hidden": "true",
+  });
+  wrong.appendChild(createSvgElement("path", { d: "M7 7 L17 17 M17 7 L7 17" }));
+  indicator.appendChild(wrong);
+
+  return indicator;
+}
+
+function setVerifyIndicator(indicator, state, label) {
+  indicator.classList.remove("is-idle", "is-correct", "is-wrong", "animate");
+  // Force a reflow so the state animation can replay on repeated checks.
+  void indicator.offsetWidth;
+  indicator.classList.add(state, "animate");
+  indicator.setAttribute("aria-label", label);
 }
 
 function buildLoveHeartGlyph() {
@@ -320,6 +414,7 @@ function buildLexiconVerifier() {
     row.appendChild(glyph);
 
     const input = document.createElement("input");
+    input.className = "guess-input";
     input.type = "text";
     input.placeholder = "Guess meaning";
     input.setAttribute("aria-label", `Guess for glyph ${entry.glyph}`);
@@ -331,26 +426,25 @@ function buildLexiconVerifier() {
     button.setAttribute("aria-label", "Verify guess");
     row.appendChild(button);
 
-    const status = document.createElement("p");
-    status.className = "guess-status";
-    status.textContent = "Unverified";
+    const status = buildVerifyIndicator();
     row.appendChild(status);
 
     function runCheck() {
       const guess = normalize(input.value);
+      input.classList.remove("is-correct", "is-wrong");
 
       if (!guess) {
-        status.className = "guess-status bad";
-        status.textContent = "Add a guess first";
+        input.classList.add("is-wrong");
+        setVerifyIndicator(status, "is-wrong", "Add a guess first");
         return;
       }
 
-      if (entry.answers.includes(guess)) {
-        status.className = "guess-status ok";
-        status.textContent = "Correct";
+      if (isAcceptedGuess(guess, entry.answers)) {
+        input.classList.add("is-correct");
+        setVerifyIndicator(status, "is-correct", "Correct");
       } else {
-        status.className = "guess-status bad";
-        status.textContent = "Not this one yet";
+        input.classList.add("is-wrong");
+        setVerifyIndicator(status, "is-wrong", "Not this one yet");
       }
     }
 
@@ -372,25 +466,6 @@ function mountFinalVine() {
   finalVineMount.appendChild(buildVineSentence(finalWords, "Final vine sentence"));
 }
 
-function bindFinalTranslationCheck() {
-  const accepted = ["chris hides gift under tv"];
-
-  translationForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const guess = normalize(translationInput.value);
-
-    if (accepted.includes(guess)) {
-      translationFeedback.className = "feedback ok";
-      translationFeedback.textContent = "Correct. You decoded the vine.";
-      return;
-    }
-
-    translationFeedback.className = "feedback bad";
-    translationFeedback.textContent = "Not quite yet. Compare clues and try again.";
-  });
-}
-
 buildClueCards();
 mountFinalVine();
 buildLexiconVerifier();
-bindFinalTranslationCheck();
