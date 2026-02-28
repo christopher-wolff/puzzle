@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vines of Hidden Words</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Manrope:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="grain"></div>
+
+    <main class="layout">
+      <section class="panel reveal" aria-label="Clues">
+        <div id="clue-list" class="clue-list" aria-live="polite"></div>
+      </section>
+
+      <section class="panel reveal" aria-label="Final">
+        <div class="panel-head">
+          <h2>Final Vine</h2>
+          <p>Translate this sentence to solve the puzzle.</p>
+        </div>
+        <div id="final-vine" class="final-vine" aria-label="Final vine sentence"></div>
+
+        <form id="translation-form" class="translation-form" autocomplete="off">
+          <label for="final-translation">Your translation</label>
+          <div class="translation-controls">
+            <input
+              id="final-translation"
+              name="final-translation"
+              type="text"
+              placeholder="Type the full meaning..."
+              aria-label="Final translation"
+              aria-describedby="final-feedback"
+            />
+            <button type="submit" aria-label="Check translation">Check</button>
+          </div>
+          <p id="final-feedback" class="feedback" role="status"></p>
+        </form>
+      </section>
+
+      <section class="panel reveal" aria-label="Verifier">
+        <div class="panel-head">
+          <h2>Word Verifier</h2>
+          <p>Check guesses for each selected word.</p>
+        </div>
+        <div id="lexicon-list" class="lexicon-list"></div>
+      </section>
+    </main>
+
+    <footer class="reveal">
+      <p>
+        Clue scene files should be in <code>assets/clues/</code> as
+        <code>clue-01.png</code> ... <code>clue-05.png</code>.
+      </p>
+    </footer>
+
+    <script src="./script.js"></script>
+  </body>
+</html>

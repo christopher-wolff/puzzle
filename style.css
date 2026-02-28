@@ -1,0 +1,459 @@
+:root {
+  --bg-top: #f7edd5;
+  --bg-bottom: #d7be8f;
+  --ink: #1f2d2f;
+  --ink-muted: #364546;
+  --panel: rgba(252, 247, 234, 0.86);
+  --tile: #efe0be;
+  --tile-border: #9f8357;
+  --accent: #b9522b;
+  --accent-soft: #dc9f5d;
+  --ok: #2f7a48;
+  --warn: #8f5f1a;
+  --bad: #9f2f2f;
+  --shadow: 0 18px 35px rgba(72, 50, 18, 0.16);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background:
+    radial-gradient(circle at 15% 10%, rgba(255, 255, 255, 0.42), transparent 35%),
+    radial-gradient(circle at 85% 80%, rgba(118, 70, 23, 0.18), transparent 42%),
+    linear-gradient(165deg, var(--bg-top), var(--bg-bottom));
+  color: var(--ink);
+  font-family: "Manrope", "Avenir Next", "Segoe UI", sans-serif;
+  line-height: 1.45;
+  padding: 2rem 1rem 3rem;
+}
+
+.grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(rgba(41, 31, 13, 0.07) 1px, transparent 1px),
+    radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 4px 4px, 3px 3px;
+  background-position: 0 0, 1px 1px;
+  opacity: 0.58;
+}
+
+.hero {
+  margin: 0 auto 1.4rem;
+  max-width: 980px;
+  position: relative;
+  z-index: 1;
+}
+
+.eyebrow {
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  margin: 0;
+}
+
+h1,
+h2 {
+  font-family: "Cinzel", "Georgia", serif;
+  margin: 0;
+  letter-spacing: 0.03em;
+}
+
+h1 {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  margin-top: 0.25rem;
+}
+
+h2 {
+  font-size: clamp(1.15rem, 2.7vw, 1.7rem);
+}
+
+.intro {
+  color: var(--ink-muted);
+  margin-top: 0.6rem;
+  max-width: 55ch;
+}
+
+.layout {
+  display: grid;
+  gap: 1.1rem;
+  margin: 0 auto;
+  max-width: 980px;
+  position: relative;
+  z-index: 1;
+}
+
+.panel {
+  background: var(--panel);
+  backdrop-filter: blur(1px);
+  border: 1px solid rgba(64, 45, 18, 0.18);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  padding: 1rem;
+}
+
+.panel-head {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 1rem;
+  justify-content: space-between;
+  margin-bottom: 0.8rem;
+}
+
+.panel-head p {
+  color: var(--ink-muted);
+  font-size: 0.93rem;
+  margin: 0;
+}
+
+.clue-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.clue-card {
+  animation: card-in 500ms ease both;
+  background: rgba(255, 250, 240, 0.95);
+  border: 1px solid rgba(83, 63, 25, 0.17);
+  border-radius: 14px;
+  display: grid;
+  gap: 0.7rem;
+  padding: 0.75rem;
+}
+
+.clue-card:nth-child(odd) {
+  background: rgba(250, 241, 223, 0.95);
+}
+
+.clue-card h3 {
+  color: var(--ink-muted);
+  font-family: "Manrope", sans-serif;
+  font-size: 0.88rem;
+  letter-spacing: 0.07em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.clue-image {
+  align-items: center;
+  background:
+    linear-gradient(160deg, rgba(213, 180, 126, 0.28), rgba(169, 119, 62, 0.18)),
+    #f6e8c8;
+  border: 1px dashed rgba(78, 54, 19, 0.4);
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  min-height: 210px;
+  overflow: hidden;
+  position: relative;
+}
+
+.clue-image img {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.placeholder-note {
+  color: var(--ink-muted);
+  font-size: 0.85rem;
+  max-width: 26ch;
+  padding: 1rem;
+  text-align: center;
+}
+
+.vine-shell {
+  background: linear-gradient(180deg, rgba(244, 231, 203, 0.95), rgba(227, 204, 157, 0.9));
+  border: 1px solid rgba(96, 67, 26, 0.28);
+  border-radius: 16px;
+  padding: 0.4rem 0.25rem;
+}
+
+.vine-svg {
+  color: #5b7a35;
+  display: block;
+  height: auto;
+  width: 100%;
+}
+
+.vine-main {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3.3;
+}
+
+.vine-main-echo {
+  opacity: 0.2;
+  stroke: currentColor;
+  stroke-width: 1.45;
+}
+
+.sentence-stem {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.3;
+  opacity: 0.85;
+}
+
+.vine-glyph-wrap {
+  color: currentColor;
+  opacity: 0.98;
+}
+
+.tree-glyph {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.tree-root {
+  opacity: 0.95;
+  stroke-width: 2.3;
+}
+
+.tree-edge {
+  opacity: 0.98;
+  stroke-width: 2.85;
+}
+
+.tree-node,
+.tree-tip-node {
+  fill: currentColor;
+  stroke: none;
+}
+
+.tree-node {
+  opacity: 0.35;
+}
+
+.tree-tip-node {
+  opacity: 0.55;
+}
+
+.final-vine .vine-shell {
+  margin-bottom: 0.95rem;
+}
+
+.translation-form {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.translation-form label {
+  font-weight: 700;
+}
+
+.translation-controls {
+  display: grid;
+  gap: 0.55rem;
+  grid-template-columns: 1fr auto;
+}
+
+input,
+button {
+  border-radius: 10px;
+  font: inherit;
+}
+
+input {
+  border: 1px solid rgba(76, 51, 20, 0.35);
+  padding: 0.65rem 0.75rem;
+}
+
+input:focus {
+  border-color: var(--accent);
+  outline: 2px solid rgba(185, 82, 43, 0.22);
+}
+
+button {
+  background: linear-gradient(180deg, var(--accent-soft), #ca8644);
+  border: 1px solid rgba(111, 68, 31, 0.4);
+  color: #2d1f0f;
+  cursor: pointer;
+  font-weight: 700;
+  padding: 0.6rem 0.95rem;
+  transition: transform 120ms ease, filter 120ms ease;
+}
+
+button:hover,
+button:focus-visible {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+
+.feedback {
+  font-weight: 600;
+  margin: 0;
+  min-height: 1.5em;
+}
+
+.feedback.ok {
+  color: var(--ok);
+}
+
+.feedback.bad {
+  color: var(--bad);
+}
+
+.lexicon-list {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.lexicon-row {
+  align-items: center;
+  background: rgba(255, 251, 244, 0.93);
+  border: 1px solid rgba(74, 54, 26, 0.18);
+  border-radius: 12px;
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: minmax(70px, 94px) 1fr auto minmax(110px, 130px);
+  padding: 0.55rem;
+}
+
+.glyph-word {
+  align-items: center;
+  background: var(--tile);
+  border: 2px solid var(--tile-border);
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  min-height: 72px;
+  min-width: 84px;
+  padding: 0.2rem;
+}
+
+.glyph-swatch {
+  color: #3a2612;
+  display: block;
+  height: 58px;
+  width: 58px;
+}
+
+.glyph-swatch-frame {
+  fill: #f8ecd5;
+  stroke: rgba(86, 60, 25, 0.7);
+  stroke-linejoin: round;
+  stroke-width: 3.4;
+}
+
+.glyph-swatch-tree {
+  color: #3a2612;
+}
+
+.glyph-swatch-tree .tree-root {
+  stroke-width: 2.9;
+}
+
+.glyph-swatch-tree .tree-edge {
+  stroke-width: 3.1;
+}
+
+.guess-status {
+  color: var(--warn);
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.guess-status.ok {
+  color: var(--ok);
+}
+
+.guess-status.bad {
+  color: var(--bad);
+}
+
+footer {
+  color: var(--ink-muted);
+  font-size: 0.88rem;
+  margin: 1rem auto 0;
+  max-width: 980px;
+  position: relative;
+  z-index: 1;
+}
+
+code {
+  background: rgba(87, 59, 25, 0.13);
+  border-radius: 6px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
+  padding: 0.1rem 0.35rem;
+}
+
+.reveal {
+  animation: rise 600ms ease both;
+}
+
+.panel.reveal:nth-of-type(2) {
+  animation-delay: 130ms;
+}
+
+.panel.reveal:nth-of-type(3) {
+  animation-delay: 230ms;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 680px) {
+  body {
+    padding: 1.1rem 0.72rem 2.1rem;
+  }
+
+  .translation-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .lexicon-row {
+    grid-template-columns: 1fr;
+  }
+
+  .glyph-word {
+    justify-self: start;
+  }
+
+  .clue-image {
+    min-height: 165px;
+  }
+}
