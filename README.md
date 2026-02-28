@@ -23,4 +23,4 @@ Simple static puzzle site designed for GitHub Pages.
 - Every word is a sprout branch off the main vine.
 - Clue scenes are image-gen outputs (`.png`, optional `.webp/.jpg` fallback).
 - Only glyphs are SVG.
-- Final target sentence: `Chris hides gift TV`.
+- Final target sentence: `Chris hides gift under TV`.

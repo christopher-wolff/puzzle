@@ -1,20 +1,24 @@
 const clues = [
   { id: "01", filename: "clue-01", words: ["chris", "loves", "kimberly"] },
-  { id: "02", filename: "clue-02", words: ["chris", "wraps", "gift"] },
+  { id: "02", filename: "clue-02", words: ["chris", "creates", "gift"] },
   { id: "03", filename: "clue-03", words: ["chris", "hides"] },
   { id: "04", filename: "clue-04", words: ["chris", "kimberly", "watch", "tv"] },
   { id: "05", filename: "clue-05", words: ["chris", "hides", "under", "table"] },
 ];
 
-const finalWords = ["chris", "hides", "gift", "tv"];
+const finalWords = ["chris", "hides", "gift", "under", "tv"];
 
 const verifierLexicon = [
-  { glyph: "chris", answers: ["chris"] },
-  { glyph: "hides", answers: ["hides", "hide"] },
-  { glyph: "gift", answers: ["gift", "present"] },
+  { glyph: "kimberly", answers: ["kimberly"] },
+  { glyph: "watch", answers: ["watch", "watches"] },
   { glyph: "under", answers: ["under", "beneath"] },
-  { glyph: "tv", answers: ["tv", "television"] },
+  { glyph: "creates", answers: ["creates", "create", "makes", "make"] },
+  { glyph: "chris", answers: ["chris"] },
+  { glyph: "loves", answers: ["loves", "love"] },
   { glyph: "table", answers: ["table", "desk"] },
+  { glyph: "tv", answers: ["tv", "television"] },
+  { glyph: "gift", answers: ["gift", "present"] },
+  { glyph: "hides", answers: ["hides", "hide"] },
 ];
 
 // Binary-tree signatures (max depth 2 => 3 levels including root).
@@ -22,7 +26,7 @@ const WORD_TREES = {
   chris: ["", "L", "R", "LL"],
   kimberly: ["", "L", "R", "RR"],
   loves: ["", "L", "R", "LR", "RL"],
-  wraps: ["", "L", "R", "LL", "LR"],
+  creates: ["", "L", "R", "LL", "LR"],
   hides: ["", "L", "R", "RL", "RR"],
   gift: ["", "L", "R", "LL", "RR"],
   tv: ["", "L", "R", "LR"],
@@ -36,7 +40,7 @@ const WORD_TREE_LENGTHS = {
   chris: { L: 20, R: 12, LL: 9 },
   kimberly: { L: 12, R: 20, RR: 9 },
   loves: { L: 16, R: 16, LR: 11, RL: 11 },
-  wraps: { L: 18, R: 10, LL: 12, LR: 8 },
+  creates: { L: 18, R: 10, LL: 12, LR: 8 },
   hides: { L: 10, R: 18, RL: 12, RR: 8 },
   gift: { L: 14, R: 14, LL: 7, RR: 13 },
   tv: { L: 9, R: 18, LR: 13 },
@@ -82,7 +86,33 @@ function saveProgress(progress) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
 }
 
+function buildLoveHeartGlyph() {
+  const group = createSvgElement("g", {
+    class: "heart-glyph",
+  });
+
+  group.appendChild(
+    createSvgElement("path", {
+      class: "heart-root",
+      d: "M 0 0 L 0 5.5",
+    })
+  );
+
+  group.appendChild(
+    createSvgElement("path", {
+      class: "heart-edge",
+      d: "M 0 0 C -7 -7 -18 -14 -18 -24 C -18 -31 -13 -36 -7 -36 C -3 -36 0 -34 0 -29 C 0 -34 3 -36 7 -36 C 13 -36 18 -31 18 -24 C 18 -14 7 -7 0 0",
+    })
+  );
+
+  return group;
+}
+
 function buildBinaryTreeGlyph(token) {
+  if (token === "loves") {
+    return buildLoveHeartGlyph();
+  }
+
   const signature = new Set((WORD_TREES[token] || ["", "L", "R"]).map((path) => path.toUpperCase()));
   const lengthProfile = WORD_TREE_LENGTHS[token] || {};
   signature.add("");
@@ -369,7 +399,7 @@ function mountFinalVine() {
 }
 
 function bindFinalTranslationCheck() {
-  const accepted = ["chris hides gift tv"];
+  const accepted = ["chris hides gift under tv"];
 
   translationForm.addEventListener("submit", (event) => {
     event.preventDefault();

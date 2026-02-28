@@ -225,12 +225,29 @@ h2 {
   stroke-linejoin: round;
 }
 
+.heart-glyph {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .tree-root {
   opacity: 0.95;
   stroke-width: 2.3;
 }
 
+.heart-root {
+  opacity: 0.95;
+  stroke-width: 2.3;
+}
+
 .tree-edge {
+  opacity: 0.98;
+  stroke-width: 2.85;
+}
+
+.heart-edge {
   opacity: 0.98;
   stroke-width: 2.85;
 }
@@ -364,7 +381,15 @@ button:focus-visible {
   stroke-width: 2.9;
 }
 
+.glyph-swatch-tree .heart-root {
+  stroke-width: 2.9;
+}
+
 .glyph-swatch-tree .tree-edge {
+  stroke-width: 3.1;
+}
+
+.glyph-swatch-tree .heart-edge {
   stroke-width: 3.1;
 }
 

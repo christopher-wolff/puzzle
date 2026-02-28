@@ -10,7 +10,7 @@ These prompts are used by `tools/generate_clue_images_openai.py`.
 Prompt: `Chris and Kimberly smiling at each other with tiny floating hearts, affectionate and playful.`
 
 2. `clue-02.png`
-Prompt: `Chris wrapping a present with ribbon while smiling, Kimberly admiring him nearby.`
+Prompt: `Chris creating a gift with craft materials on a table while smiling, Kimberly admiring him nearby.`
 
 3. `clue-03.png`
 Prompt: `Chris playfully hiding behind the side of a couch with a mischievous smile.`

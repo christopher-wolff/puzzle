@@ -36,7 +36,7 @@ CLUES = [
     {
         "id": "02",
         "filename": "clue-02.png",
-        "scene": "Chris wrapping a present with ribbon while smiling, Kimberly admiring him nearby.",
+        "scene": "Chris creating a gift with craft materials on a table while smiling, Kimberly admiring him nearby.",
     },
     {
         "id": "03",
