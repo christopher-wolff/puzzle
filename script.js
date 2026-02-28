@@ -49,7 +49,6 @@ const WORD_TREE_LENGTHS = {
   table: { R: 17, RR: 12 },
 };
 
-const STORAGE_KEY = "anniversary-puzzle-vine-verifier";
 const SVG_NS = "http://www.w3.org/2000/svg";
 
 const clueList = document.querySelector("#clue-list");
@@ -71,19 +70,6 @@ function createSvgElement(name, attrs = {}) {
 
 function normalize(text) {
   return text.trim().toLowerCase().replace(/[.,!?]/g, "").replace(/\s+/g, " ");
-}
-
-function loadProgress() {
-  try {
-    const value = localStorage.getItem(STORAGE_KEY);
-    return value ? JSON.parse(value) : {};
-  } catch {
-    return {};
-  }
-}
-
-function saveProgress(progress) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
 }
 
 function buildLoveHeartGlyph() {
@@ -322,7 +308,6 @@ function buildClueCards() {
 }
 
 function buildLexiconVerifier() {
-  const progress = loadProgress();
   const fragment = document.createDocumentFragment();
 
   verifierLexicon.forEach((entry) => {
@@ -338,7 +323,6 @@ function buildLexiconVerifier() {
     input.type = "text";
     input.placeholder = "Guess meaning";
     input.setAttribute("aria-label", `Guess for glyph ${entry.glyph}`);
-    input.value = progress[entry.glyph] || "";
     row.appendChild(input);
 
     const button = document.createElement("button");
@@ -354,8 +338,6 @@ function buildLexiconVerifier() {
 
     function runCheck() {
       const guess = normalize(input.value);
-      progress[entry.glyph] = input.value;
-      saveProgress(progress);
 
       if (!guess) {
         status.className = "guess-status bad";
@@ -379,14 +361,6 @@ function buildLexiconVerifier() {
         runCheck();
       }
     });
-
-    if (progress[entry.glyph]) {
-      const saved = normalize(progress[entry.glyph]);
-      if (entry.answers.includes(saved)) {
-        status.className = "guess-status ok";
-        status.textContent = "Correct";
-      }
-    }
 
     fragment.appendChild(row);
   });
