@@ -1,17 +1,18 @@
 :root {
   --bg-top: #f7edd5;
   --bg-bottom: #d7be8f;
-  --ink: #1f2d2f;
-  --ink-muted: #364546;
-  --panel: rgba(252, 247, 234, 0.86);
+  --bg-neutral: #f1efe8;
+  --ink: #1f3544;
+  --ink-muted: #446173;
+  --panel: rgba(244, 250, 255, 0.9);
   --tile: #efe0be;
   --tile-border: #9f8357;
-  --accent: #b9522b;
-  --accent-soft: #dc9f5d;
+  --accent: #2f7388;
+  --accent-soft: #79b5c4;
   --ok: #2f7a48;
-  --warn: #8f5f1a;
+  --warn: #6d6a2a;
   --bad: #9f2f2f;
-  --shadow: 0 18px 35px rgba(72, 50, 18, 0.16);
+  --shadow: 0 18px 35px rgba(39, 68, 92, 0.18);
 }
 
 *,
@@ -27,10 +28,7 @@ body {
 }
 
 body {
-  background:
-    radial-gradient(circle at 15% 10%, rgba(255, 255, 255, 0.42), transparent 35%),
-    radial-gradient(circle at 85% 80%, rgba(118, 70, 23, 0.18), transparent 42%),
-    linear-gradient(165deg, var(--bg-top), var(--bg-bottom));
+  background: var(--bg-neutral);
   color: var(--ink);
   font-family: "Manrope", "Avenir Next", "Segoe UI", sans-serif;
   line-height: 1.45;
@@ -47,6 +45,34 @@ body {
   background-size: 4px 4px, 3px 3px;
   background-position: 0 0, 1px 1px;
   opacity: 0.58;
+}
+
+.secret-pattern {
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  position: fixed;
+  z-index: 0;
+}
+
+.secret-pattern-track {
+  display: grid;
+  gap: 1.45rem;
+  inset: -40vh -24vw;
+  position: absolute;
+  transform: translate3d(0, 0, 0);
+  transform-origin: center;
+  width: 190vw;
+  will-change: transform;
+}
+
+.secret-row {
+  display: flex;
+  gap: 0;
+}
+
+.secret-row.offset {
+  margin-left: 0;
 }
 
 .hero {
@@ -98,7 +124,7 @@ h2 {
 .panel {
   background: var(--panel);
   backdrop-filter: blur(1px);
-  border: 1px solid rgba(64, 45, 18, 0.18);
+  border: 1px solid rgba(50, 83, 106, 0.2);
   border-radius: 20px;
   box-shadow: var(--shadow);
   padding: 1rem;
@@ -126,8 +152,8 @@ h2 {
 
 .clue-card {
   animation: card-in 500ms ease both;
-  background: rgba(255, 250, 240, 0.95);
-  border: 1px solid rgba(83, 63, 25, 0.17);
+  background: rgba(247, 252, 255, 0.95);
+  border: 1px solid rgba(65, 100, 125, 0.17);
   border-radius: 14px;
   display: grid;
   gap: 0.7rem;
@@ -135,7 +161,7 @@ h2 {
 }
 
 .clue-card:nth-child(odd) {
-  background: rgba(250, 241, 223, 0.95);
+  background: rgba(236, 246, 252, 0.95);
 }
 
 .clue-card h3 {
@@ -150,9 +176,9 @@ h2 {
 .clue-image {
   align-items: center;
   background:
-    linear-gradient(160deg, rgba(213, 180, 126, 0.28), rgba(169, 119, 62, 0.18)),
-    #f6e8c8;
-  border: 1px dashed rgba(78, 54, 19, 0.4);
+    linear-gradient(160deg, rgba(158, 192, 214, 0.28), rgba(98, 134, 160, 0.2)),
+    #e6f1f7;
+  border: 1px dashed rgba(70, 105, 132, 0.45);
   border-radius: 12px;
   display: flex;
   justify-content: center;
@@ -177,14 +203,22 @@ h2 {
 }
 
 .vine-shell {
-  background: linear-gradient(180deg, rgba(244, 231, 203, 0.95), rgba(227, 204, 157, 0.9));
-  border: 1px solid rgba(96, 67, 26, 0.28);
+  background: linear-gradient(180deg, rgba(247, 248, 239, 0.96), rgba(242, 239, 231, 0.94));
+  border: 1px solid rgba(105, 126, 142, 0.28);
   border-radius: 16px;
   padding: 0.4rem 0.25rem;
 }
 
+.secret-shell {
+  background: none;
+  border: none;
+  box-shadow: none;
+  margin-right: -1px;
+  padding: 0;
+}
+
 .vine-svg {
-  color: #5b7a35;
+  color: #4e728f;
   display: block;
   height: auto;
   width: 100%;
@@ -216,6 +250,44 @@ h2 {
 .vine-glyph-wrap {
   color: currentColor;
   opacity: 0.98;
+}
+
+.secret-shell .vine-svg {
+  color: rgba(78, 114, 143, 0.32);
+  width: 320px;
+}
+
+.secret-shell .vine-main {
+  stroke-linecap: butt;
+  stroke-width: 2.15;
+}
+
+.secret-shell .vine-main-echo {
+  opacity: 0.12;
+  stroke-linecap: butt;
+  stroke-width: 0.95;
+}
+
+.secret-shell .sentence-stem {
+  opacity: 0.65;
+  stroke-width: 1.45;
+}
+
+.secret-shell .tree-root,
+.secret-shell .heart-root {
+  opacity: 0.85;
+  stroke-width: 1.55;
+}
+
+.secret-shell .tree-edge,
+.secret-shell .heart-edge {
+  opacity: 0.9;
+  stroke-width: 2.1;
+}
+
+.secret-shell .tree-node,
+.secret-shell .tree-tip-node {
+  opacity: 0.2;
 }
 
 .tree-glyph {
@@ -287,19 +359,19 @@ input:focus {
 }
 
 button {
-  background: linear-gradient(180deg, var(--accent-soft), #ca8644);
-  border: 1px solid rgba(111, 68, 31, 0.4);
+  background: #c78e4d;
+  border: 1px solid rgba(111, 68, 31, 0.38);
   color: #2d1f0f;
   cursor: pointer;
   font-weight: 700;
-  padding: 0.6rem 0.95rem;
-  transition: transform 120ms ease, filter 120ms ease;
+  padding: 0.58rem 0.9rem;
+  transition: background-color 120ms ease, filter 120ms ease;
 }
 
 button:hover,
 button:focus-visible {
-  filter: brightness(1.05);
-  transform: translateY(-1px);
+  background: #ba8243;
+  filter: brightness(1.03);
 }
 
 .lexicon-list {
@@ -455,7 +527,7 @@ button:focus-visible {
 }
 
 code {
-  background: rgba(87, 59, 25, 0.13);
+  background: rgba(61, 95, 120, 0.13);
   border-radius: 6px;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
     "Courier New", monospace;

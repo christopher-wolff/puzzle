@@ -14,18 +14,13 @@
   </head>
   <body>
     <div class="grain"></div>
+    <div id="secret-pattern" class="secret-pattern" aria-hidden="true">
+      <div id="secret-pattern-track" class="secret-pattern-track"></div>
+    </div>
 
     <main class="layout">
       <section class="panel reveal" aria-label="Clues">
         <div id="clue-list" class="clue-list" aria-live="polite"></div>
-      </section>
-
-      <section class="panel reveal" aria-label="Final">
-        <div class="panel-head">
-          <h2>Final Vine</h2>
-          <p>Use the word verifier to decode this sentence.</p>
-        </div>
-        <div id="final-vine" class="final-vine" aria-label="Final vine sentence"></div>
       </section>
 
       <section class="panel reveal" aria-label="Verifier">

@@ -59,8 +59,8 @@ const WORD_TREE_LENGTHS = {
 const SVG_NS = "http://www.w3.org/2000/svg";
 
 const clueList = document.querySelector("#clue-list");
-const finalVineMount = document.querySelector("#final-vine");
 const lexiconMount = document.querySelector("#lexicon-list");
+const secretPatternTrack = document.querySelector("#secret-pattern-track");
 
 function createSvgElement(name, attrs = {}) {
   const element = document.createElementNS(SVG_NS, name);
@@ -281,15 +281,17 @@ function buildBinaryTreeGlyph(token) {
   return group;
 }
 
-function buildVineSentence(words, ariaLabel) {
+function buildVineSentence(words, ariaLabel, options = {}) {
+  const variant = options.variant || "panel";
+  const isPattern = variant === "pattern";
   const shell = document.createElement("div");
-  shell.className = "vine-shell";
+  shell.className = isPattern ? "vine-shell secret-shell" : "vine-shell";
 
-  const width = Math.max(360, 140 + words.length * 120);
-  const height = 160;
-  const startX = 24;
-  const endX = width - 24;
-  const baselineY = 118;
+  const width = isPattern ? Math.max(360, 130 + words.length * 86) : Math.max(360, 140 + words.length * 120);
+  const height = isPattern ? 92 : 160;
+  const startX = isPattern ? -4 : 24;
+  const endX = width - (isPattern ? -4 : 24);
+  const baselineY = isPattern ? 61 : 118;
 
   const svg = createSvgElement("svg", {
     class: "vine-svg",
@@ -307,12 +309,12 @@ function buildVineSentence(words, ariaLabel) {
   words.forEach((token, index) => {
     const t = (index + 1) / (words.length + 1);
     const anchorX = startX + spread * t;
-    const stemHeight = 14;
+    const stemHeight = isPattern ? 12 : 14;
     const stemTopY = baselineY - stemHeight;
     const stemPath = `M ${anchorX.toFixed(2)} ${baselineY.toFixed(2)} L ${anchorX.toFixed(2)} ${stemTopY.toFixed(2)}`;
     svg.appendChild(createSvgElement("path", { class: "sentence-stem", d: stemPath }));
 
-    const glyphScale = 1.24;
+    const glyphScale = isPattern ? 1.02 : 1.24;
     const glyphGroup = createSvgElement("g", {
       class: "vine-glyph-wrap",
       transform: `translate(${anchorX.toFixed(2)} ${stemTopY.toFixed(2)}) scale(${glyphScale.toFixed(3)})`,
@@ -462,10 +464,77 @@ function buildLexiconVerifier() {
   lexiconMount.appendChild(fragment);
 }
 
-function mountFinalVine() {
-  finalVineMount.appendChild(buildVineSentence(finalWords, "Final vine sentence"));
+function mountSecretPattern() {
+  if (!secretPatternTrack) {
+    return;
+  }
+
+  secretPatternTrack.textContent = "";
+  const pageHeight = Math.max(
+    window.innerHeight,
+    document.body.scrollHeight,
+    document.documentElement.scrollHeight
+  );
+  const scrollRange = Math.max(0, pageHeight - window.innerHeight);
+  const parallaxBuffer = scrollRange * 0.28;
+  const requiredPatternHeight = pageHeight + parallaxBuffer + window.innerHeight * 1.8;
+  const rowSpacing = 124;
+  const rowCount = Math.max(12, Math.ceil(requiredPatternHeight / rowSpacing) + 4);
+  const colCount = Math.max(6, Math.ceil(window.innerWidth / 320) + 5);
+
+  for (let rowIndex = 0; rowIndex < rowCount; rowIndex += 1) {
+    const row = document.createElement("div");
+    row.className = rowIndex % 2 === 0 ? "secret-row" : "secret-row offset";
+
+    for (let colIndex = 0; colIndex < colCount; colIndex += 1) {
+      row.appendChild(buildVineSentence(finalWords, "Hidden sentence pattern", { variant: "pattern" }));
+    }
+
+    secretPatternTrack.appendChild(row);
+  }
+}
+
+function bindSecretParallax() {
+  if (!secretPatternTrack) {
+    return;
+  }
+
+  let rafId = 0;
+
+  function render() {
+    rafId = 0;
+    const shift = window.scrollY * 0.28;
+    secretPatternTrack.style.transform = `translate3d(0, ${(-shift).toFixed(2)}px, 0)`;
+  }
+
+  function queueRender() {
+    if (rafId === 0) {
+      rafId = window.requestAnimationFrame(render);
+    }
+  }
+
+  window.addEventListener(
+    "resize",
+    () => {
+      mountSecretPattern();
+      queueRender();
+    },
+    { passive: true }
+  );
+
+  window.addEventListener("scroll", queueRender, { passive: true });
+  window.addEventListener(
+    "load",
+    () => {
+      mountSecretPattern();
+      queueRender();
+    },
+    { once: true }
+  );
+  queueRender();
 }
 
 buildClueCards();
-mountFinalVine();
+mountSecretPattern();
+bindSecretParallax();
 buildLexiconVerifier();
